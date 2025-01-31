@@ -27,7 +27,7 @@ async def main():
 
     # Инициализируем бот и диспетчер
     bot = Bot(
-        token=Config().tg_bot.token, 
+        token=config.tg_bot.token, 
         default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     dp = Dispatcher()
 
@@ -35,8 +35,8 @@ async def main():
     await set_main_menu(bot)
 
     # Регистрируем роутеры в диспетчере
-    dp.include_router(other_handlers.router)
     dp.include_router(user_handlers.router)
+    dp.include_router(other_handlers.router)
 
     # Пропускаем накопившиеся апдейты и запускаем polling и запускаем polling
     await bot.delete_webhook(drop_pending_updates=True)
