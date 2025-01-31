@@ -9,34 +9,29 @@ book: dict[int, str] = {}
 
 # Функция, возвращающая строку с текстом страницы и ее размер
 def _get_part_text(text: str, start: int, page_size: int) -> tuple[str, int]:
-    """
-    Извлекает часть текста (страницу), ограниченную размером 
-    и обрезанную по последнему знаку препинания.
-    """
-
-    end = min(start + page_size + 1, len(text))  # Индекс конца страницы (не включая его)
+    # Индекс конца страницы (не включая его)
+    end = min(start + page_size + 1, len(text))
     page_text = text[start:end]  # Текст страницы
 
-    punctuation_pattern = re.compile(r'[,.!;:?]+')  # Регулярное выражение для знаков препинания
+    # Регулярное выражение для знаков препинания
+    punctuation_pattern = re.compile(r'[,.!;:?]+')
 
     # Последнее подходящее совпадение с конца
     last_match = next((
         match for match in reversed(list(punctuation_pattern.finditer(page_text)))
         if match.end() <= page_size and  # Не выходит за границы
-        (not re.search(r"\.{2,3}", page_text) or match.end() != re.search(r"\.{2,3}", page_text).start()) 
+        (not re.search(r"\.{2,3}", page_text) or match. \
+            end() != re.search(r"\.{2,3}", page_text).start()) 
         # Не многоточие или не совпадает с началом
     ), None)
 
-    page_text = page_text[:last_match.end()] if last_match else page_text # Обрезаем, если есть совпадение
+    # Обрезаем, если есть совпадение
+    page_text = page_text[:last_match.end()] if last_match else page_text
 
     return page_text, len(page_text)  # Текст и длина   
 
 # Функция, формирующая словарь книги
 def prepare_book(path) -> None:
-    """
-    Читает текстовый файл книги, разбивает его на страницы заданного размера
-    и сохраняет в словаре book.
-    """
     with open(path, 'r', encoding='utf-8') as f:
         text = f.read() # Читаем весь текст книги из файла
 
